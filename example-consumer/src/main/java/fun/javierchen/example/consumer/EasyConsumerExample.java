@@ -2,11 +2,11 @@ package fun.javierchen.example.consumer;
 
 import fun.javierchen.example.common.model.Order;
 import fun.javierchen.example.common.service.OrderService;
-import fun.javierchen.example.common.service.OrderServiceImpl;
 import fun.javierchen.simplerpc.proxy.ServiceProxyFactory;
 
 public class EasyConsumerExample {
     public static void main(String[] args) {
+
         // 获取远程的订单服务
         OrderService orderService = ServiceProxyFactory.getProxy(OrderService.class);
 

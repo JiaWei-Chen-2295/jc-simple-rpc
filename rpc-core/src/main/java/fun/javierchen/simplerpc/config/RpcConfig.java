@@ -1,0 +1,16 @@
+package fun.javierchen.simplerpc.config;
+
+import lombok.Data;
+
+@Data
+public class RpcConfig {
+
+    private String name = "jc-rpc";
+
+    private String version = "1.0";
+
+    private String serverHost = "localhost";
+
+    private int serverPort = 8080;
+
+}

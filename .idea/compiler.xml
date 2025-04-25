@@ -11,7 +11,9 @@
         <module name="example-provider" />
         <module name="example-consumer" />
         <module name="example-common" />
+        <module name="rpc-core" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel target="8" />
   </component>
 </project>
