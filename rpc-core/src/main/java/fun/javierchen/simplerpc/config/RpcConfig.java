@@ -13,4 +13,6 @@ public class RpcConfig {
 
     private int serverPort = 8080;
 
+    private boolean useMock = false;
+
 }

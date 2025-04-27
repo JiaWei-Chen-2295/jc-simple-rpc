@@ -19,6 +19,11 @@ public class EasyConsumerExample {
                 System.out.println("订单错误");
             }
 
+            short num = orderService.getNum();
+            System.out.println("Mock 后接口的返回值是" + num);
+            Object obj = orderService.getObj();
+            System.out.println("Mock 对象的接口" + obj);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

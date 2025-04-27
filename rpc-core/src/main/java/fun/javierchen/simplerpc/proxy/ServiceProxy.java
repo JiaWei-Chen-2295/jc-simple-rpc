@@ -24,8 +24,6 @@ public class ServiceProxy implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         // 指定序列化器
         Serializer serializer = new JdkSerializer();
-        String name = method.getName();
-        System.out.println("请求类的方法名字" + name);
         // 构造请求
         RpcRequest rpcRequest = RpcRequest.builder()
                 .serviceName(method.getDeclaringClass().getName())
@@ -38,7 +36,6 @@ public class ServiceProxy implements InvocationHandler {
         byte[] bodyBytes = serializer.serialize(rpcRequest);
 
         // 发送请求
-        // warning !! 这里被硬编码了
         try (HttpResponse httpResponse = HttpRequest.post(String.format("http://%s:%d", RpcApplication.getRpcConfig().getServerHost(), RpcApplication.getRpcConfig().getServerPort()))
                 .body(bodyBytes)
                 .execute()
@@ -49,9 +46,8 @@ public class ServiceProxy implements InvocationHandler {
             RpcResponse rpcResponse = serializer.deserialize(resultBytes, RpcResponse.class);
             return rpcResponse.getData();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("发送调用请求失败{}", e.getLocalizedMessage());
         }
-
         return null;
     }
 }
