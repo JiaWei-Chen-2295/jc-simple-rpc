@@ -2,14 +2,12 @@ package fun.javierchen.example.consumer;
 
 import fun.javierchen.example.common.model.Order;
 import fun.javierchen.example.common.service.OrderService;
-import fun.javierchen.simplerpc.proxy.ServiceProxyFactory;
+import fun.javierchen.jcrpc.proxy.ServiceProxyFactory;
 
 public class EasyConsumerExample {
     public static void main(String[] args) {
-
         // 获取远程的订单服务
         OrderService orderService = ServiceProxyFactory.getProxy(OrderService.class);
-
         long orderId = 329L;
         try {
             Order order = orderService.getOrder(orderId);
@@ -18,15 +16,12 @@ public class EasyConsumerExample {
             }  else {
                 System.out.println("订单错误");
             }
-
             short num = orderService.getNum();
             System.out.println("Mock 后接口的返回值是" + num);
             Object obj = orderService.getObj();
             System.out.println("Mock 对象的接口" + obj);
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 }

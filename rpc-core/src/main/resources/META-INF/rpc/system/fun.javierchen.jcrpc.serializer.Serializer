@@ -1,0 +1,4 @@
+jdk=fun.javierchen.jcrpc.serializer.impl.JdkSerializer
+json=fun.javierchen.jcrpc.serializer.impl.JSONSerializer
+kryo=fun.javierchen.jcrpc.serializer.impl.KryoSerializer
+hessian=fun.javierchen.jcrpc.serializer.impl.HessianSerializer

@@ -1,10 +1,10 @@
 package fun.javierchen.example.provider;
 
 import fun.javierchen.example.common.service.OrderService;
-import fun.javierchen.simplerpc.RpcApplication;
-import fun.javierchen.simplerpc.registry.LocalRegistry;
-import fun.javierchen.simplerpc.server.HTTPServer;
-import fun.javierchen.simplerpc.server.VertXHTTPServerImpl;
+import fun.javierchen.jcrpc.RpcApplication;
+import fun.javierchen.jcrpc.registry.LocalRegistry;
+import fun.javierchen.jcrpc.server.HTTPServer;
+import fun.javierchen.jcrpc.server.VertXHTTPServerImpl;
 
 /**
  * 简易服务提供者示例
