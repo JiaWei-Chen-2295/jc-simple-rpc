@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutionException;
 public class JetcdTest {
     @Test
     public void demo() throws ExecutionException, InterruptedException {
-        // create client using endpoints
+        // 使用端点创建客户端
         Client client = Client.builder()
                 .endpoints("http://localhost:2379")
                 .build();
@@ -20,17 +20,15 @@ public class JetcdTest {
         ByteSequence key = ByteSequence.from("test_key".getBytes());
         ByteSequence value = ByteSequence.from("test_value".getBytes());
 
-// put the key-value
+        // 存储键值对
         kvClient.put(key, value).get();
 
-// get the CompletableFuture
+        // 通过 CompletableFuture 获取到键值
         CompletableFuture<GetResponse> getFuture = kvClient.get(key);
-
-// get the value from CompletableFuture
         GetResponse response = getFuture.get();
         System.out.println("resp" + response);
 
-// delete the key
+        // 删除键
         kvClient.delete(key).get();
 
     }

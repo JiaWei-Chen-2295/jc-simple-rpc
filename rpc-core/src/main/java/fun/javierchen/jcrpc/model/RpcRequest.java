@@ -1,5 +1,7 @@
 package fun.javierchen.jcrpc.model;
 
+import fun.javierchen.jcrpc.constant.RpcConstant;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +22,8 @@ public class RpcRequest implements Serializable {
      * 需要调用的方法名
      */
     private String methodName;
+
+    private String serviceVersion = RpcConstant.DEFAULT_SERVICE_VERSION;
     /**
      * 参数类型
      */

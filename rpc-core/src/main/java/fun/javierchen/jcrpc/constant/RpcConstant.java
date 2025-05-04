@@ -7,4 +7,9 @@ public class RpcConstant {
      */
     public static final String CONFIG_PREFIX = "jc-rpc";
 
+    /**
+     * 默认服务版本
+     */
+    public static final String DEFAULT_SERVICE_VERSION = "1.0";
+
 }
