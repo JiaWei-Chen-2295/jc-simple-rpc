@@ -1,7 +1,10 @@
 package fun.javierchen.jcrpc;
 
+import fun.javierchen.jcrpc.config.RegistryConfig;
 import fun.javierchen.jcrpc.config.RpcConfig;
 import fun.javierchen.jcrpc.constant.RpcConstant;
+import fun.javierchen.jcrpc.registry.Registry;
+import fun.javierchen.jcrpc.registry.RegistryFactory;
 import fun.javierchen.jcrpc.utils.ConfigUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,6 +15,11 @@ public class RpcApplication {
     public static void init(RpcConfig newRpcConfig) {
         rpcConfig = newRpcConfig;
         log.info("config为{}", newRpcConfig);
+        // 注册中心初始化
+        RegistryConfig registryConfig = rpcConfig.getRegistryConfig();
+        Registry registry = RegistryFactory.getInstance(registryConfig.getRegistry());
+        registry.init(registryConfig);
+        log.info("registry 初始化，配置：{}", registryConfig);
     }
 
     public static void init() {

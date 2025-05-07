@@ -1,11 +1,16 @@
 package fun.javierchen.jcrpc.proxy;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import fun.javierchen.jcrpc.RpcApplication;
 import fun.javierchen.jcrpc.config.RpcConfig;
+import fun.javierchen.jcrpc.constant.RpcConstant;
 import fun.javierchen.jcrpc.model.RpcRequest;
 import fun.javierchen.jcrpc.model.RpcResponse;
+import fun.javierchen.jcrpc.model.ServiceMetaInfo;
+import fun.javierchen.jcrpc.registry.Registry;
+import fun.javierchen.jcrpc.registry.RegistryFactory;
 import fun.javierchen.jcrpc.serializer.Serializer;
 import fun.javierchen.jcrpc.serializer.SerializerFactory;
 import fun.javierchen.jcrpc.serializer.impl.JdkSerializer;
@@ -13,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * 使用 JDK 动态代理对需要的服务进行代理
@@ -37,8 +43,22 @@ public class ServiceProxy implements InvocationHandler {
         // 序列化
         byte[] bodyBytes = serializer.serialize(rpcRequest);
 
+        RpcConfig rpcConfig = RpcApplication.getRpcConfig();
+        Registry registry = RegistryFactory.getInstance(rpcConfig.getRegistryConfig().getRegistry());
+        ServiceMetaInfo serviceMetaInfo = new ServiceMetaInfo();
+        serviceMetaInfo.setServiceName(rpcRequest.getServiceName());
+        serviceMetaInfo.setServiceVersion(RpcConstant.DEFAULT_SERVICE_VERSION);
+        List<ServiceMetaInfo> serviceMetaInfoList = registry.serviceDiscovery(serviceMetaInfo.getServiceKey());
+        if (CollUtil.isEmpty(serviceMetaInfoList)) {
+            throw new RuntimeException("暂时没有服务");
+        }
+        // 暂时取出第一个
+        ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
+
+
+
         // 发送请求
-        try (HttpResponse httpResponse = HttpRequest.post(String.format("http://%s:%d", RpcApplication.getRpcConfig().getServerHost(), RpcApplication.getRpcConfig().getServerPort()))
+        try (HttpResponse httpResponse = HttpRequest.post(selectedServiceMetaInfo.getServiceAddress())
                 .body(bodyBytes)
                 .execute()
         ) {

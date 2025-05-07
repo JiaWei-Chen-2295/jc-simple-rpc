@@ -1,5 +1,6 @@
 package fun.javierchen.jcrpc.model;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 
 /**
@@ -48,5 +49,15 @@ public class ServiceMetaInfo {
         return String.format("%s/%s:%s", getServiceKey(), serviceHost, servicePort);
     }
 
+    /**
+     * 获取完整的服务地址
+     * @return
+     */
+    public String getServiceAddress() {
+        if (!StrUtil.contains(serviceHost, "http")) {
+            return String.format("http://%s:%s", serviceHost, servicePort);
+        }
+        return String.format("%s:%s", serviceHost, servicePort);
+    }
 
 }

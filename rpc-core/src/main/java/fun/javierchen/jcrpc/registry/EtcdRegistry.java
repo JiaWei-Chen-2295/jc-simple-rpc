@@ -6,6 +6,7 @@ import fun.javierchen.jcrpc.model.ServiceMetaInfo;
 import io.etcd.jetcd.*;
 import io.etcd.jetcd.options.GetOption;
 import io.etcd.jetcd.options.PutOption;
+import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class EtcdRegistry implements Registry {
     private Client client;
     private KV kvClient;
@@ -74,7 +76,7 @@ public class EtcdRegistry implements Registry {
     }
     @Override
     public void destory() {
-        System.out.println("当前节点下线");
+        log.info("当前节点下线");
         // 释放资源
         if (kvClient != null) {
             kvClient.close();

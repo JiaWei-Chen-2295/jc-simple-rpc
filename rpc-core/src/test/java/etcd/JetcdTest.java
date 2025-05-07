@@ -30,6 +30,5 @@ public class JetcdTest {
 
         // 删除键
         kvClient.delete(key).get();
-
     }
 }
