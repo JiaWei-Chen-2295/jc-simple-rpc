@@ -2,6 +2,7 @@ package fun.javierchen.example.consumer;
 
 import fun.javierchen.example.common.model.Order;
 import fun.javierchen.example.common.service.OrderService;
+import fun.javierchen.jcrpc.RpcApplication;
 import fun.javierchen.jcrpc.proxy.ServiceProxyFactory;
 
 public class EasyConsumerExample {
@@ -16,10 +17,14 @@ public class EasyConsumerExample {
             }  else {
                 System.out.println("订单错误");
             }
-            short num = orderService.getNum();
-            System.out.println("Mock 后接口的返回值是" + num);
-            Object obj = orderService.getObj();
-            System.out.println("Mock 对象的接口" + obj);
+            // 用于测试 Mock
+            if (RpcApplication.getRpcConfig().isUseMock()) {
+                short num = orderService.getNum();
+                System.out.println("Mock 后接口的返回值是" + num);
+                Object obj = orderService.getObj();
+                System.out.println("Mock 对象的接口" + obj);
+            }
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
