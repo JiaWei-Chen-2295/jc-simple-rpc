@@ -10,6 +10,7 @@ import fun.javierchen.jcrpc.model.ServiceMetaInfo;
 import io.etcd.jetcd.*;
 import io.etcd.jetcd.options.GetOption;
 import io.etcd.jetcd.options.PutOption;
+import io.etcd.jetcd.options.WatchOption;
 import io.etcd.jetcd.watch.WatchEvent;
 import lombok.extern.slf4j.Slf4j;
 
@@ -106,10 +107,12 @@ public class EtcdRegistry implements Registry {
             // 解析服务信息
             List<ServiceMetaInfo> fetchedServiceMetaInfoList = keyValues.stream()
                     .map(keyValue -> {
-                        String key = keyValue.getValue().toString(StandardCharsets.UTF_8);
+                        String key = keyValue.getKey().toString(StandardCharsets.UTF_8);
+                        String value = keyValue.getValue().toString(StandardCharsets.UTF_8);
+                        ServiceMetaInfo serviceMetaInfo = JSONUtil.toBean(value, ServiceMetaInfo.class);
                         // 添加对这个 key 的监听
-                        watch(key);
-                        return JSONUtil.toBean(key, ServiceMetaInfo.class);
+                        watch(key, serviceMetaInfo.getServiceKey());
+                        return serviceMetaInfo;
                     })
                     .collect(Collectors.toList());
             // 进行缓存
@@ -174,7 +177,8 @@ public class EtcdRegistry implements Registry {
     }
 
     @Override
-    public void watch(String serviceNodeKey) {
+    public void watch(String serviceNodeKey, String serviceKey) {
+        log.info("开始监听服务节点:{}", serviceNodeKey);
         // 获取 watch 操作客户端对象
         Watch watchClient = client.getWatchClient();
         // 加入到已经监听的集合
@@ -184,15 +188,18 @@ public class EtcdRegistry implements Registry {
         }
         // 监听当前服务节点
         watchClient.watch(ByteSequence.from(serviceNodeKey, StandardCharsets.UTF_8),
+                WatchOption.builder().isPrefix(true).build(),
                 watchResponse -> {
                     // 监听更新和删除事件
                     for (WatchEvent event : watchResponse.getEvents()) {
                         switch (event.getEventType()) {
                             // 删除时清空缓存
                             case DELETE:
-                                registryServiceMutiCache.removeCache(serviceNodeKey);
+                                registryServiceMutiCache.removeCache(serviceKey);
+                                break;
                             case PUT:
-                                registryServiceMutiCache.removeCache(serviceNodeKey);
+                                registryServiceMutiCache.removeCache(serviceKey);
+                                break;
                             default:
                                 break;
                         }
