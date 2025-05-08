@@ -38,6 +38,8 @@ public class EtcdRegistry implements Registry {
         kvClient = client.getKVClient();
         // 开启心跳机制
         heartBeat();
+        // 创建注册 ShutdownHook 用于资源的释放
+        Runtime.getRuntime().addShutdownHook(new Thread(this::destory));
     }
 
     @Override
@@ -97,6 +99,16 @@ public class EtcdRegistry implements Registry {
     @Override
     public void destory() {
         log.info("当前节点下线");
+
+        // 删除所有服务节点
+        for (String registerKey : localRegisterNodeKeySet) {
+            try {
+                kvClient.delete(ByteSequence.from(registerKey, StandardCharsets.UTF_8)).get();
+            } catch (Exception e) {
+                throw new RuntimeException("节点" + registerKey + "下线失败", e);
+            }
+        }
+
         // 释放资源
         if (kvClient != null) {
             kvClient.close();

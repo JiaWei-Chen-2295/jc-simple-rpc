@@ -64,20 +64,11 @@ public class RegistryTest {
 
     @Test
     public void heartBeat() throws Exception {
-
         // init 方法中已经执行心跳检测了
         // 键值默认 30 s 过期
         // 当 TTL 剩余 20 S 的时候就会自动续期 到了 30 秒
-        ServiceMetaInfo serviceMetaInfo = new ServiceMetaInfo();
-        serviceMetaInfo.setServiceName("service");
-        serviceMetaInfo.setServiceVersion("1.0");
-        serviceMetaInfo.setServiceHost("localhost");
-        serviceMetaInfo.setServicePort(1234);
-
-        registry.register(serviceMetaInfo);
+        registry();
         // 阻塞 1 分钟
         Thread.sleep(60 * 1000L);
     }
-
-
 }
