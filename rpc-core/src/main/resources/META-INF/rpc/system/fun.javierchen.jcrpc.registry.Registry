@@ -1,1 +1,2 @@
 etcd=fun.javierchen.jcrpc.registry.EtcdRegistry
+redis=fun.javierchen.jcrpc.registry.RedisRegistry
