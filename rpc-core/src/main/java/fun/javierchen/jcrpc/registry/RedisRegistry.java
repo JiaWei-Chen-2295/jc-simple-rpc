@@ -8,10 +8,11 @@ import fun.javierchen.jcrpc.config.RegistryConfig;
 import fun.javierchen.jcrpc.model.ServiceMetaInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
+import org.redisson.api.ObjectListener;
 import org.redisson.api.RBucket;
-import org.redisson.api.RFuture;
 import org.redisson.api.RKeys;
 import org.redisson.api.RedissonClient;
+import org.redisson.client.codec.StringCodec;
 import org.redisson.config.Config;
 
 import java.time.Duration;
@@ -31,12 +32,16 @@ public class RedisRegistry implements Registry {
      */
     private final Set<String> serviceNodeKeys = new ConcurrentHashSet<>();
 
+
+
     @Override
     public void init(RegistryConfig registryConfig) {
         String address = registryConfig.getAddress();
         Config config = new Config();
         config.useSingleServer()
                 .setAddress(address);
+        // 使用其他的编码器 防止编码错误
+        config.setCodec(new StringCodec());
         redisson = Redisson.create(config);
         log.info("RedisRegistry init success, address: {}", address);
 
@@ -84,6 +89,8 @@ public class RedisRegistry implements Registry {
             String valueStr = redisson.getBucket(key).get().toString();
             ServiceMetaInfo serviceMetaInfo = JSONUtil.toBean(valueStr, ServiceMetaInfo.class);
             serviceMetaInfoList.add(serviceMetaInfo);
+            // 被发现的服务进行监听
+//            watch(key, serviceNodeKey);
         }
         return serviceMetaInfoList;
     }
@@ -126,6 +133,6 @@ public class RedisRegistry implements Registry {
 
     @Override
     public void watch(String serviceNodeKey, String serviceKey) {
-        // 暂时不实现
+        // 因为没有实现缓存 所以无需 watch 键值的变化
     }
 }

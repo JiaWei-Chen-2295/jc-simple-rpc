@@ -73,4 +73,16 @@ public class RedisRegistryTest {
         Thread.sleep(40 * 1000L);
     }
 
+    @Test
+    public void watch() throws Exception {
+        ServiceMetaInfo serviceMetaInfo = new ServiceMetaInfo();
+        serviceMetaInfo.setServiceName("service");
+        serviceMetaInfo.setServiceVersion("1.0");
+        serviceMetaInfo.setServiceHost("localhost");
+        serviceMetaInfo.setServicePort(1234);
+        registry.register(serviceMetaInfo);
+        registry.serviceDiscovery(serviceMetaInfo.getServiceKey());
+        Thread.sleep(50 * 1000L);
+    }
+
 }
