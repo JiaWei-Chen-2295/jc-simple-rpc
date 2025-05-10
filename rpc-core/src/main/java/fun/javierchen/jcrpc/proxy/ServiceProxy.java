@@ -1,6 +1,7 @@
 package fun.javierchen.jcrpc.proxy;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import fun.javierchen.jcrpc.RpcApplication;
@@ -9,16 +10,24 @@ import fun.javierchen.jcrpc.constant.RpcConstant;
 import fun.javierchen.jcrpc.model.RpcRequest;
 import fun.javierchen.jcrpc.model.RpcResponse;
 import fun.javierchen.jcrpc.model.ServiceMetaInfo;
+import fun.javierchen.jcrpc.protocol.*;
 import fun.javierchen.jcrpc.registry.Registry;
 import fun.javierchen.jcrpc.registry.RegistryFactory;
 import fun.javierchen.jcrpc.serializer.Serializer;
 import fun.javierchen.jcrpc.serializer.SerializerFactory;
 import fun.javierchen.jcrpc.serializer.impl.JdkSerializer;
+import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.net.NetClient;
+import io.vertx.core.net.NetSocket;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * 使用 JDK 动态代理对需要的服务进行代理
@@ -55,21 +64,51 @@ public class ServiceProxy implements InvocationHandler {
         // 暂时取出第一个
         ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
 
+        // 发送 TCP 请求
+        Vertx vertx = Vertx.vertx();
+        NetClient netClient = vertx.createNetClient();
+        CompletableFuture<RpcResponse> rpcResponseCompletableFuture = new CompletableFuture<>();
+        netClient.connect(selectedServiceMetaInfo.getServicePort(), selectedServiceMetaInfo.getServiceHost(), result -> {
+            if (result.succeeded()) {
+                System.out.println("TCP client connected to server");
+                NetSocket socket = result.result();
+                // 发送数据
+                ProtocolMessage<RpcRequest> protocolMessage = new ProtocolMessage<>();
+                ProtocolMessage.Header header = new ProtocolMessage.Header();
+                header.setMagic(ProtocolConstant.MAGIC);
+                header.setVersion(ProtocolConstant.PROTOCOL_VERSION);
+                header.setSerialization((byte) ProtocolMessageSerializerEnum.getEnumByValue(RpcApplication.getRpcConfig().getSerializerType()).getKey());
+                header.setMessageType((byte) ProtocolMessageTypeEnum.REQUEST.getKey());
+                header.setRequestId(IdUtil.getSnowflakeNextId());
+                protocolMessage.setHeader(header);
+                protocolMessage.setBody(rpcRequest);
+
+                // 编码请求
+                try {
+                    Buffer encodeBuffer = ProtocolMessageEncoder.encode(protocolMessage);
+                    socket.write(encodeBuffer);
+                } catch (IOException e) {
+                    throw new RuntimeException("协议消息编码错误");
+                }
+
+                // 接收响应
+                socket.handler(buffer -> {
+                    try {
+                        ProtocolMessage<RpcResponse> rpcResponseProtocolMessage = (ProtocolMessage<RpcResponse>) ProtocolMessageDecoder.decode(buffer);
+                        rpcResponseCompletableFuture.complete(rpcResponseProtocolMessage.getBody());
+                    } catch (IOException e) {
+                        throw new RuntimeException("协议消息解码错误");
+                    }
+                });
+            } else {
+                System.err.println("Failed to connect to TCP server");
+            }
+        });
 
 
-        // 发送请求
-        try (HttpResponse httpResponse = HttpRequest.post(selectedServiceMetaInfo.getServiceAddress())
-                .body(bodyBytes)
-                .execute()
-        ) {
-            byte[] resultBytes = httpResponse.bodyBytes();
+        RpcResponse rpcResponse = rpcResponseCompletableFuture.get();
+        netClient.close();
+        return rpcResponse.getData();
 
-            // 反序列话获取响应对象
-            RpcResponse rpcResponse = serializer.deserialize(resultBytes, RpcResponse.class);
-            return rpcResponse.getData();
-        } catch (Exception e) {
-            log.error("发送调用请求失败{}", e.getLocalizedMessage());
-        }
-        return null;
     }
 }

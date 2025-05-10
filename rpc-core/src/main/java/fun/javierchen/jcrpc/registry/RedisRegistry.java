@@ -33,7 +33,6 @@ public class RedisRegistry implements Registry {
     private final Set<String> serviceNodeKeys = new ConcurrentHashSet<>();
 
 
-
     @Override
     public void init(RegistryConfig registryConfig) {
         String address = registryConfig.getAddress();

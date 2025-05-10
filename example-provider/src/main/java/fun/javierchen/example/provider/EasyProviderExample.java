@@ -10,6 +10,7 @@ import fun.javierchen.jcrpc.registry.Registry;
 import fun.javierchen.jcrpc.registry.RegistryFactory;
 import fun.javierchen.jcrpc.server.HTTPServer;
 import fun.javierchen.jcrpc.server.VertXHTTPServerImpl;
+import fun.javierchen.jcrpc.server.tcp.VertxTcpServer;
 
 import java.util.concurrent.ExecutionException;
 
@@ -40,8 +41,12 @@ public class EasyProviderExample {
             System.out.println("注册出错");
         }
 
-        // 启动服务
-        HTTPServer httpServer = new VertXHTTPServerImpl();
-        httpServer.start(RpcApplication.getRpcConfig().getServerPort());
+//        启动服务
+//        HTTPServer httpServer = new VertXHTTPServerImpl();
+//        httpServer.start(RpcApplication.getRpcConfig().getServerPort());
+
+        // 启动新的 TCP 服务
+        VertxTcpServer vertxTcpServer = new VertxTcpServer();
+        vertxTcpServer.start(RpcApplication.getRpcConfig().getServerPort());
     }
 }
