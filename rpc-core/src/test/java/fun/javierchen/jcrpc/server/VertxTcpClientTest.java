@@ -12,7 +12,7 @@ public class VertxTcpClientTest {
                 io.vertx.core.net.NetSocket socket = result.result();
                 for (int i = 0; i < 2000; i++) {
                     // 发送数据
-                    socket.write("Hello, server!Hello, server!Hello, server!Hello, server!Hello, server!Hello, server!Hello, server!Hello, server!Hello, server!Hello, server!Hello, server!Hello, server!Hello, server!Hello, server!Hello, server!Hello, server!Hello, server!Hello, server!");
+                    socket.write("Hello, server!Hello, server!Hello, server!");
                 }
                 // 接收响应
                 socket.handler(buffer -> {

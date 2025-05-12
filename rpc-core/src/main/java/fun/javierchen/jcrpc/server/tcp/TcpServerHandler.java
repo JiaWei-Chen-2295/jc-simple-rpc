@@ -22,8 +22,9 @@ public class TcpServerHandler implements Handler<NetSocket> {
 
     @Override
     public void handle(NetSocket netSocket) {
+
         // 处理连接
-        netSocket.handler(buffer -> {
+        TcpBufferHandlerWrapper bufferHandlerWrapper = new TcpBufferHandlerWrapper(buffer -> {
             // 接收请求
             ProtocolMessage<RpcRequest> protocolMessage;
 
@@ -33,6 +34,7 @@ public class TcpServerHandler implements Handler<NetSocket> {
                 throw new RuntimeException(e);
             }
             RpcRequest rpcRequest = protocolMessage.getBody();
+
 
             // 处理请求
             // 并构造响应结果对象
@@ -62,5 +64,7 @@ public class TcpServerHandler implements Handler<NetSocket> {
 
 
         });
+
+        netSocket.handler(bufferHandlerWrapper);
     }
 }
