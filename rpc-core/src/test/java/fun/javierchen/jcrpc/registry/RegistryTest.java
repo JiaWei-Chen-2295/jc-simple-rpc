@@ -1,4 +1,4 @@
-package registry;
+package fun.javierchen.jcrpc.registry;
 
 import fun.javierchen.jcrpc.config.RegistryConfig;
 import fun.javierchen.jcrpc.model.ServiceMetaInfo;

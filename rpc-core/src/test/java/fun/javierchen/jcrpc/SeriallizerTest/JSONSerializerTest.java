@@ -1,5 +1,5 @@
-package SeriallizerTest;
-import common.model.User;
+package fun.javierchen.jcrpc.SeriallizerTest;
+import fun.javierchen.jcrpc.model.User;
 import fun.javierchen.jcrpc.serializer.Serializer;
 import fun.javierchen.jcrpc.serializer.impl.JSONSerializer;
 import org.junit.Test;

@@ -1,9 +1,7 @@
-package registry;
+package fun.javierchen.jcrpc.registry;
 
 import fun.javierchen.jcrpc.config.RegistryConfig;
 import fun.javierchen.jcrpc.model.ServiceMetaInfo;
-import fun.javierchen.jcrpc.registry.RedisRegistry;
-import fun.javierchen.jcrpc.registry.RegistryFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,8 +14,8 @@ public class RedisRegistryTest {
 
     @Before
     public void init() {
-        registry = (RedisRegistry) RegistryFactory.getInstance("redis");
-        registry.init(RegistryConfig.builder().address("redis://127.0.0.1:6379").registry("redis").build());
+        registry = (RedisRegistry) RegistryFactory.getInstance("fun/javierchen/jcrpc/redis");
+        registry.init(RegistryConfig.builder().address("redis://127.0.0.1:6379").registry("fun/javierchen/jcrpc/redis").build());
     }
 
     @Test

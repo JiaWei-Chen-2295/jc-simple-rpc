@@ -1,4 +1,4 @@
-package common.model;
+package fun.javierchen.jcrpc.model;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package protocol;
+package fun.javierchen.jcrpc.protocol;
 
 import cn.hutool.core.util.IdUtil;
 import fun.javierchen.jcrpc.constant.RpcConstant;

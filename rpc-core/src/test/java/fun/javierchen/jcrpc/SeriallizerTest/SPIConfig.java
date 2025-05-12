@@ -1,4 +1,4 @@
-package SeriallizerTest;
+package fun.javierchen.jcrpc.SeriallizerTest;
 
 import fun.javierchen.jcrpc.serializer.Serializer;
 import org.junit.Test;

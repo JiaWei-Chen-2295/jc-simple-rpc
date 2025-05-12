@@ -1,4 +1,4 @@
-package etcd;
+package fun.javierchen.jcrpc.etcd;
 
 import io.etcd.jetcd.ByteSequence;
 import io.etcd.jetcd.Client;
