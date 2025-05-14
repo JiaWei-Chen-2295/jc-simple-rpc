@@ -1,5 +1,7 @@
 package fun.javierchen.jcrpc.config;
 
+import fun.javierchen.jcrpc.loadbalancer.LoadBalancer;
+import fun.javierchen.jcrpc.loadbalancer.LoadBalancerKeys;
 import lombok.Data;
 
 @Data
@@ -21,5 +23,7 @@ public class RpcConfig {
      * 注册中心配置
      */
     private RegistryConfig registryConfig = new RegistryConfig();
+
+    private String loadBalancer = LoadBalancerKeys.ROUND_ROBIN;
 
 }

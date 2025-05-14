@@ -47,6 +47,12 @@ public class EasyProviderExample {
 
         // 启动新的 TCP 服务
         VertxTcpServer vertxTcpServer = new VertxTcpServer();
+        if (args.length > 0) {
+            int port = Integer.parseInt(args[0]);
+            vertxTcpServer.start(port);
+            return ;
+        }
+
         vertxTcpServer.start(RpcApplication.getRpcConfig().getServerPort());
     }
 }

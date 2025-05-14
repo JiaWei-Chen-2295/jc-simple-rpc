@@ -1,0 +1,3 @@
+roundRobin=fun.javierchen.jcrpc.loadbalancer.RoundRobinLoadBalancer
+random=fun.javierchen.jcrpc.loadbalancer.RandomLoadBalancer
+consistentHash=fun.javierchen.jcrpc.loadbalancer.ConsistentHashLoadBalancer
