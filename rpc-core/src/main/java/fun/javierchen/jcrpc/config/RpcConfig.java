@@ -1,5 +1,6 @@
 package fun.javierchen.jcrpc.config;
 
+import fun.javierchen.jcrpc.fault.retry.RetryStrategyKeys;
 import fun.javierchen.jcrpc.loadbalancer.LoadBalancer;
 import fun.javierchen.jcrpc.loadbalancer.LoadBalancerKeys;
 import lombok.Data;
@@ -25,5 +26,9 @@ public class RpcConfig {
     private RegistryConfig registryConfig = new RegistryConfig();
 
     private String loadBalancer = LoadBalancerKeys.ROUND_ROBIN;
+    /**
+     * 指定重试策略
+     */
+    private String retryStrategy = RetryStrategyKeys.FIXED_INTERVAL;
 
 }

@@ -22,13 +22,14 @@ public class VertxTcpClient {
 
     /**
      * 发送TCP协议
+     *
      * @param selectedServiceMetaInfo
      * @param rpcRequest
      * @return
      * @throws ExecutionException
      * @throws InterruptedException
      */
-    public static RpcResponse doRequest(ServiceMetaInfo selectedServiceMetaInfo, RpcRequest rpcRequest) throws ExecutionException, InterruptedException {
+    public static RpcResponse doRequest(ServiceMetaInfo selectedServiceMetaInfo, RpcRequest rpcRequest) throws Exception {
         Vertx vertx = Vertx.vertx();
         NetClient netClient = vertx.createNetClient();
         CompletableFuture<RpcResponse> rpcResponseCompletableFuture = new CompletableFuture<>();
@@ -71,23 +72,25 @@ public class VertxTcpClient {
         });
         RpcResponse rpcResponse = rpcResponseCompletableFuture.get();
         netClient.close();
+
         return rpcResponse;
+
     }
 
     public void start() throws InterruptedException {
         Vertx vertx = Vertx.vertx();
         vertx.createNetClient().connect(8886, "localhost", result -> {
-           if (result.succeeded()) {
-               System.out.println("Vertx listening port: 8886 Success !!");
-               NetSocket socket = result.result();
+            if (result.succeeded()) {
+                System.out.println("Vertx listening port: 8886 Success !!");
+                NetSocket socket = result.result();
 
-               socket.write("Hello, server!Hello, server!Hello, server!Hello, server! I'm Client.");
-               socket.handler(buffer -> {
-                   System.out.println("Received: " + buffer.toString("UTF-8"));
-               });
-           }  else {
-               System.err.println("Connect failed: " + result.cause());
-           }
+                socket.write("Hello, server!Hello, server!Hello, server!Hello, server! I'm Client.");
+                socket.handler(buffer -> {
+                    System.out.println("Received: " + buffer.toString("UTF-8"));
+                });
+            } else {
+                System.err.println("Connect failed: " + result.cause());
+            }
         });
     }
 

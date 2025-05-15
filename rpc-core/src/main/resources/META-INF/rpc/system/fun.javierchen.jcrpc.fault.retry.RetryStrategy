@@ -1,0 +1,2 @@
+no_retry=fun.javierchen.jcrpc.fault.retry.NoRetryStrategy
+fixed_interval=fun.javierchen.jcrpc.fault.retry.FixedIntervalRetryStrategy

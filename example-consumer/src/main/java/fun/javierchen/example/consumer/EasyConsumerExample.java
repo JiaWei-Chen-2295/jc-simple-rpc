@@ -24,7 +24,7 @@ public class EasyConsumerExample {
                 Object obj = orderService.getObj();
                 System.out.println("Mock 对象的接口" + obj);
             }
-            System.exit(0);
+//            System.exit(0);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
