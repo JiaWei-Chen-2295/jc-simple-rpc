@@ -1,5 +1,7 @@
 # 用于学习的 RPC 框架开发项目
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/JiaWei-Chen-2295/jc-simple-rpc)
+
 ## 基本概念
 
 ### 1. **RPC是什么？**
