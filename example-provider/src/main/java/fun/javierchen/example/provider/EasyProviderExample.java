@@ -36,6 +36,9 @@ public class EasyProviderExample {
             serviceMetaInfo.setServiceName(serviceName);
             serviceMetaInfo.setServiceHost(rpcConfig.getServerHost());
             serviceMetaInfo.setServicePort(rpcConfig.getServerPort());
+            if (args != null && args.length > 0) {
+                serviceMetaInfo.setServicePort(Integer.parseInt(args[0]));
+            }
             registry.register(serviceMetaInfo);
         } catch (Exception e) {
             System.out.println("注册出错");
