@@ -39,7 +39,7 @@ public class EasyProviderExample {
             if (args != null && args.length > 0) {
                 serviceMetaInfo.setServicePort(Integer.parseInt(args[0]));
             }
-            serviceMetaInfo.setServicePort(5525);
+
 
             registry.register(serviceMetaInfo);
         } catch (Exception e) {

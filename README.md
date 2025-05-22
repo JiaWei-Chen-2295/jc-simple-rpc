@@ -4,11 +4,14 @@
 
 ## 基本概念
 
-### 1. **RPC是什么？**
+### **RPC是什么？**
 
 **是一种计算机通信协议 用于程序在不同设备之间的通信交互**
 
-### 2. **RPC 核心概念**
+## 包结构
+- [bootstrap](rpc-core/src/main/java/fun/javierchen/jcrpc/bootstrap)
+  - 用于框架启动和初始化 
+
 
 #### 角色
 

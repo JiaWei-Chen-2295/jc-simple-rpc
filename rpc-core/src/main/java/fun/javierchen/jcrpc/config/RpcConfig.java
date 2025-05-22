@@ -25,10 +25,10 @@ public class RpcConfig {
      */
     private RegistryConfig registryConfig = new RegistryConfig();
 
-    private String loadBalancer = LoadBalancerKeys.ROUND_ROBIN;
+    private String loadBalancer = LoadBalancerKeys.CONSISTENT_HASH;
     /**
      * 指定重试策略
      */
-    private String retryStrategy = RetryStrategyKeys.FIXED_INTERVAL;
+    private String retryStrategy = RetryStrategyKeys.NO_RETRY;
 
 }
